@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consumo de Energía</title>
     <!-- Agrega el enlace a Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
+           body {
             height: 500px;
             background-image: url("https://c.wallhere.com/photos/c0/7d/2005_cows_cairns_hdr_alandot_alandotcomgmailcom-846805.jpg!d");
             background-repeat: no-repeat;
@@ -19,20 +18,20 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
-
+        
         canvas {
             max-width: 600px;
             margin: 20px auto;
-            background-color: #ffffff;
-            border-radius: 10px;
+            background-color: #ffffff; /* Agrega el color de fondo para la gráfica */
+            border-radius: 10px; /* Bordes redondeados para la gráfica */
         }
 
         table {
             border-collapse: collapse;
             width: 50%;
             margin: 20px auto;
-            background-color: #f9f9f9;
-            border-radius: 10px;
+            background-color: #f9f9f9; /* Agrega el color de fondo para las tablas */
+            border-radius: 10px; /* Bordes redondeados para las tablas */
         }
 
         table, th, td {
@@ -47,37 +46,8 @@
         th {
             background-color: #f2f2f2;
         }
-
-        /* Estilos para pantallas más pequeñas que 600px de ancho */
-        @media only screen and (max-width: 600px) {
-            body {
-                background-size: cover;
-            }
-
-            canvas {
-                max-width: 90%;
-                height: auto;
-            }
-
-            table {
-                width: 90%;
-            }
-
-            h1 {
-                font-size: 1.5em;
-            }
-
-            th, td {
-                font-size: 0.8em;
-            }
-
-            button {
-                display: none;
-            }
-        }
     </style>
 </head>
-
 <body>
     <h1>Consumo Semanal de Energía</h1>
 
@@ -92,7 +62,6 @@
                 <th>Consumo (kW)</th>
             </tr>
         </thead>
-        <!-- Contenido de la tabla... -->
         <tbody>
             <tr>
                 <td>Lunes</td>
@@ -130,7 +99,6 @@
             </tr>
         </tfoot>
     </table>
-    </table>
 
     <!-- Tabla de Consumo Mensual -->
     <table id="consumoMensual" style="display: none;">
@@ -140,7 +108,6 @@
                 <th>Consumo (kW)</th>
             </tr>
         </thead>
-        <!-- Contenido de la tabla... -->
         <tbody>
             <tr>
                 <td>Diciembre</td>
@@ -152,6 +119,12 @@
                 <td id="eneroConsumo">0</td>
             </tr> -->
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Total Mensual</th>
+                <th id="totalMensual"></th>
+            </tr>
+        </tfoot>
     </table>
 
     <!-- Botón para mostrar consumo por mes -->
@@ -212,5 +185,4 @@
         setInterval(actualizarMiercoles, 5000);
     </script>
 </body>
-
 </html>
