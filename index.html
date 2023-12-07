@@ -247,18 +247,29 @@
         const options = {
             margin: 10,
             filename: 'consumo_mensual.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 }, // You can experiment with the scale factor
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         };
 
         // Get the monthly consumption table
         const monthlyTable = document.getElementById('consumoMensual');
 
-        // Use html2pdf to generate a PDF from the monthly consumption table
-        html2pdf(monthlyTable, options);
-    }
+        // Create a div element to hold the content to be added to the PDF
+        const contentDiv = document.createElement('div');
+        contentDiv.appendChild(document.createTextNode('Mes: DICIEMBRE'));
+        
+        // Clone the monthly table and append it to the content div
+        const clonedTable = monthlyTable.cloneNode(true);
+        contentDiv.appendChild(clonedTable);
 
+        // Get the total monthly consumption
+        const totalMensual = parseFloat(document.getElementById('totalMensual').textContent);
+        contentDiv.appendChild(document.createTextNode(`Total Mensual: ${totalMensual.toFixed(3)} kW`));
+
+        // Use html2pdf to generate a PDF from the content div
+        html2pdf(contentDiv, options);
+    }
 
 
     </script>
