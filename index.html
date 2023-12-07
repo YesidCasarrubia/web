@@ -6,6 +6,8 @@
     <title>Consumo de Energía</title>
     <!-- Agrega el enlace a Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
     <link rel="stylesheet" href="style.css">
     <style>
                body {
@@ -27,7 +29,7 @@
 
     table {
         border-collapse: collapse;
-        width: 60%; /* Reduce the width of the table */
+        width: 30%; /* Reduce the width of the table */
         margin: 10px auto; /* Adjust the margin for better spacing */
         background-color: #f9f9f9;
         border-radius: 10px;
@@ -59,15 +61,19 @@
 
     button:hover {
         background-color: #45a049; /* Darker green on hover */
-    }    
+    }
 
-      h2 {
+    h2 {
         background-color: #87CEEB; /* Light blue background color */
         padding: 10px; /* Padding for better appearance */
         color: #fff; /* White text color */
         border-radius: 5px; /* Add border radius for rounded corners */
     }
-   
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -103,11 +109,11 @@
             </tr>
             <tr>
                 <td>Viernes</td>
-                <td id="viernesConsumo">0</td>
+                <td id="viernesConsumo">1.119</td>
             </tr>
             <tr>
                 <td>Sábado</td>
-                <td id="sabadoConsumo">0</td>
+                <td id="sabadoConsumo">3.357</td>
             </tr>
             <tr>
                 <td>Domingo</td>
@@ -135,11 +141,7 @@
                 <td>Diciembre</td>
                 <td id="diciembreConsumo">0</td>
             </tr>
-            <!-- Repite este bloque para cada mes, estableciendo el valor inicial en 0 -->
-            <!-- <tr>
-                <td>Enero</td>
-                <td id="eneroConsumo">0</td>
-            </tr> -->
+            
         </tbody>
         <tfoot>
             <tr>
@@ -151,9 +153,10 @@
 
     <!-- Botón para mostrar consumo por mes -->
     <button onclick="mostrarConsumoMensual()">Consumo por Mes</button>
+    <button onclick="printScreenToPDF()">Imprimir como PDF</button>
 
     <script>
-        const consumoData = [2.238, 13.428, 4.476, 0, 0, 0, 0];
+        const consumoData = [2.238, 13.428, 4.476, 0, 1.119, 0, 0];
         const mesesData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Inicializa los consumos mensuales en 0
         const ctx = document.getElementById('consumoChart').getContext('2d');
         const consumoChart = new Chart(ctx, {
@@ -177,34 +180,87 @@
             }
         });
 
-        function actualizarMiercoles() {
-            const miercolesValue = parseFloat(document.getElementById('miercolesConsumo').textContent);
-            document.getElementById('miercolesConsumo').textContent = (miercolesValue + 0.0006216).toFixed(3);
+        function mostrarConsumoMensual() {
+            // Hide the weekly table and chart
+            document.getElementById('consumoChart').style.display = 'none';
+            document.getElementById('totalConsumo').parentNode.parentNode.style.display = 'none';
 
-            // Actualiza el valor en el array de datos y la gráfica
-            consumoData[2] = miercolesValue + 0.0006216;
+            // Show the monthly table for December
+            document.getElementById('consumoMensual').style.display = 'table';
+
+            // Hide the button after clicking it (optional, adjust as needed)
+            document.querySelector('button').style.display = 'none';
+        }
+
+
+
+        function actualizarSabado() {
+            // Get the current consumption value for Saturday
+            const sabadoValue = parseFloat(document.getElementById('sabadoConsumo').textContent);
+
+            // Increment the Saturday consumption value (you can adjust the increment as needed)
+            document.getElementById('sabadoConsumo').textContent = (sabadoValue + 0.0006216).toFixed(3);
+
+            // Update the value in the consumptionData array and the chart
+            consumoData[5] = sabadoValue + 0.0006216;
             consumoChart.update();
 
-            // Cálculo del total semanal de consumo
+            // Recalculate the total weekly consumption
             const totalSemana = consumoData.reduce((total, consumo) => total + consumo, 0);
             document.getElementById('totalConsumo').textContent = totalSemana.toFixed(3);
 
-            // Cálculo del total mensual de consumo (suponiendo 4 semanas en un mes)
-            const totalMensual = totalSemana * 1;
-            mesesData[11] = totalMensual; // Asigna el total mensual a diciembre
+            // Recalculate the total monthly consumption (assuming 4 weeks in a month)
+            const totalMensual = totalSemana * 4;
+            // Update the value for December (you may need to adjust this based on your actual month)
+            mesesData[11] = totalMensual;
             document.getElementById('diciembreConsumo').textContent = totalMensual.toFixed(3);
             document.getElementById('totalMensual').textContent = totalMensual.toFixed(3);
         }
 
-        function mostrarConsumoMensual() {
-            // Oculta la tabla de consumo semanal y muestra la de consumo mensual
-            document.getElementById('consumoMensual').style.display = 'table';
-            document.getElementById('totalConsumo').parentNode.parentNode.style.display = 'none';
-            document.getElementById('consumoChart').style.display = 'none';
-        }
+        // Set the interval to call actualizarSabado every 5 seconds
+        setInterval(actualizarSabado, 5000);
 
-        // Actualiza el valor de miércoles cada 5 segundos
-        setInterval(actualizarMiercoles, 5000);
+       
+        function printScreenToPDF() {
+        // Define the options for html2pdf
+        const options = {
+            margin: 10,
+            filename: 'consumo_energia.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        };
+
+        // Get the body element
+        const body = document.body;
+
+        // Use html2pdf to generate a PDF from the body content
+        html2pdf(body, options);
+
+        // Show the button for printing monthly consumption after generating the PDF
+        document.getElementById('printMonthlyButton').style.display = 'block';
+    }
+
+
+    function printMonthlyToPDF() {
+        // Define the options for html2pdf
+        const options = {
+            margin: 10,
+            filename: 'consumo_mensual.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        };
+
+        // Get the monthly consumption table
+        const monthlyTable = document.getElementById('consumoMensual');
+
+        // Use html2pdf to generate a PDF from the monthly consumption table
+        html2pdf(monthlyTable, options);
+    }
+
+
+
     </script>
 </body>
 </html>
