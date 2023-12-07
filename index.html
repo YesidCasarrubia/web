@@ -35,14 +35,11 @@
             border-radius: 10px;
         }
 
-        table,
-        th,
-        td {
+        table, th, td {
             border: 1px solid #ddd;
         }
 
-        th,
-        td {
+        th, td {
             padding: 10px;
             text-align: center;
         }
@@ -70,20 +67,19 @@
                 font-size: 1.5em;
             }
 
-            th,
-            td {
+            th, td {
                 font-size: 0.8em;
             }
 
             button {
-                display: inline-block;
+                display: none;
             }
         }
     </style>
 </head>
 
 <body>
-    <h1>Consumo Semanal de Energía Y</h1>
+    <h1>Consumo Semanal de Energía</h1>
 
     <!-- Gráfica de Consumo -->
     <canvas id="consumoChart"></canvas>
@@ -97,7 +93,7 @@
             </tr>
         </thead>
         <!-- Contenido de la tabla... -->
-         <tbody>
+        <tbody>
             <tr>
                 <td>Lunes</td>
                 <td id="lunesConsumo">2.238</td>
@@ -127,6 +123,13 @@
                 <td id="domingoConsumo">0</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Total Semanal</th>
+                <th id="totalConsumo"></th>
+            </tr>
+        </tfoot>
+    </table>
     </table>
 
     <!-- Tabla de Consumo Mensual -->
@@ -138,7 +141,7 @@
             </tr>
         </thead>
         <!-- Contenido de la tabla... -->
-         <tbody>
+        <tbody>
             <tr>
                 <td>Diciembre</td>
                 <td id="diciembreConsumo">0</td>
