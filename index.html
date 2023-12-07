@@ -1,188 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consumo de Energía</title>
-    <!-- Agrega el enlace a Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <style>
-           body {
-            height: 500px;
-            background-image: url("https://c.wallhere.com/photos/c0/7d/2005_cows_cairns_hdr_alandot_alandotcomgmailcom-846805.jpg!d");
-            background-repeat: no-repeat;
-            background-position-x: center;
-            background-position-y: center;
-            background-size: 100rem;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        
-        canvas {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #ffffff; /* Agrega el color de fondo para la gráfica */
-            border-radius: 10px; /* Bordes redondeados para la gráfica */
-        }
+    body {
+        height: 500px;
+        background-image: url("https://c.wallhere.com/photos/c0/7d/2005_cows_cairns_hdr_alandot_alandotcomgmailcom-846805.jpg!d");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100rem;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
 
-        table {
-            border-collapse: collapse;
-            width: 50%;
-            margin: 20px auto;
-            background-color: #f9f9f9; /* Agrega el color de fondo para las tablas */
-            border-radius: 10px; /* Bordes redondeados para las tablas */
-        }
+    canvas {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+    }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+    table {
+        border-collapse: collapse;
+        width: 40%; /* Reduce the width of the table */
+        margin: 10px auto; /* Adjust the margin for better spacing */
+        background-color: #f9f9f9;
+        border-radius: 10px;
+    }
 
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
 
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>Consumo Semanal de Energía</h1>
+    th, td {
+        padding: 8px; /* Reduce padding for a more compact look */
+        text-align: center;
+    }
 
-    <!-- Gráfica de Consumo -->
-    <canvas id="consumoChart"></canvas>
-
-    <!-- Tabla de Consumo Semanal -->
-    <table>
-        <thead>
-            <tr>
-                <th>Día</th>
-                <th>Consumo (kW)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Lunes</td>
-                <td id="lunesConsumo">2.238</td>
-            </tr>
-            <tr>
-                <td>Martes</td>
-                <td id="martesConsumo">13.428</td>
-            </tr>
-            <tr>
-                <td>Miércoles</td>
-                <td id="miercolesConsumo">4.476</td>
-            </tr>
-            <tr>
-                <td>Jueves</td>
-                <td id="juevesConsumo">0</td>
-            </tr>
-            <tr>
-                <td>Viernes</td>
-                <td id="viernesConsumo">0</td>
-            </tr>
-            <tr>
-                <td>Sábado</td>
-                <td id="sabadoConsumo">0</td>
-            </tr>
-            <tr>
-                <td>Domingo</td>
-                <td id="domingoConsumo">0</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>Total Semanal</th>
-                <th id="totalConsumo"></th>
-            </tr>
-        </tfoot>
-    </table>
-
-    <!-- Tabla de Consumo Mensual -->
-    <table id="consumoMensual" style="display: none;">
-        <thead>
-            <tr>
-                <th>Mes</th>
-                <th>Consumo (kW)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Diciembre</td>
-                <td id="diciembreConsumo">0</td>
-            </tr>
-            <!-- Repite este bloque para cada mes, estableciendo el valor inicial en 0 -->
-            <!-- <tr>
-                <td>Enero</td>
-                <td id="eneroConsumo">0</td>
-            </tr> -->
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>Total Mensual</th>
-                <th id="totalMensual"></th>
-            </tr>
-        </tfoot>
-    </table>
-
-    <!-- Botón para mostrar consumo por mes -->
-    <button onclick="mostrarConsumoMensual()">Consumo por Mes</button>
-
-    <script>
-        const consumoData = [2.238, 13.428, 4.476, 0, 0, 0, 0];
-        const mesesData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Inicializa los consumos mensuales en 0
-        const ctx = document.getElementById('consumoChart').getContext('2d');
-        const consumoChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-                datasets: [{
-                    label: 'Consumo (kW)',
-                    data: consumoData,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        function actualizarMiercoles() {
-            const miercolesValue = parseFloat(document.getElementById('miercolesConsumo').textContent);
-            document.getElementById('miercolesConsumo').textContent = (miercolesValue + 0.0006216).toFixed(3);
-
-            // Actualiza el valor en el array de datos y la gráfica
-            consumoData[2] = miercolesValue + 0.0006216;
-            consumoChart.update();
-
-            // Cálculo del total semanal de consumo
-            const totalSemana = consumoData.reduce((total, consumo) => total + consumo, 0);
-            document.getElementById('totalConsumo').textContent = totalSemana.toFixed(3);
-
-            // Cálculo del total mensual de consumo (suponiendo 4 semanas en un mes)
-            const totalMensual = totalSemana * 1;
-            mesesData[11] = totalMensual; // Asigna el total mensual a diciembre
-            document.getElementById('diciembreConsumo').textContent = totalMensual.toFixed(3);
-            document.getElementById('totalMensual').textContent = totalMensual.toFixed(3);
-        }
-
-        function mostrarConsumoMensual() {
-            // Oculta la tabla de consumo semanal y muestra la de consumo mensual
-            document.getElementById('consumoMensual').style.display = 'table';
-            document.getElementById('totalConsumo').parentNode.parentNode.style.display = 'none';
-            document.getElementById('consumoChart').style.display = 'none';
-        }
-
-        // Actualiza el valor de miércoles cada 5 segundos
-        setInterval(actualizarMiercoles, 5000);
-    </script>
-</body>
-</html>
+    th {
+        background-color: #f2f2f2;
+    }
